@@ -1,0 +1,25 @@
+/*
+*main style for styling post
+*
+*/
+
+
+.btn-download{
+    padding: 10px 20px !important;
+    font-weight: 700 !important;
+    margin-top: 30px !important;
+    border: 1px !important;
+    border-radius: 0.5px !important;
+    font-size: 14px !important;
+    
+}
+.btn-download:active,
+.btn-download:visited{
+    padding: 10px 20px !important;
+    font-weight: 700 !important;
+    margin-top: 30px !important;
+    border: 1px !important;
+    border-radius: 0.5px !important;
+    font-size: 14px !important;
+    color: #fff !important;
+}
