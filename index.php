@@ -1,10 +1,10 @@
 <?php
 /*
-*Plugin Name: wp-post-to-pdf-download
-*Description:A simple wp  plugin that  permets us to download our post  as pdf's 
-*Version:1.0
+*Plugin Name: wp_author_books
+*Description:This  plugin creates a new type   of post  called  'Book_authors' , this plugin  will  permit book  authors to  be able to  publish  books in the website. 
+*Version:0.1
 *Author:Mfou'ou medjo stanly
-*Text Domain:Wp-post-to-pdf-download
+*Text Domain:wp_author_books
 *
 */
 
@@ -19,22 +19,23 @@ if(!function_exists('add_action')){
 
 //Setup
 
-define('DOWNLOAD_PDF_PLUGIN_URL',__FILE__);
+define('BOOK_PLUGIN_URL',__FILE__);
 
 
 
 
 
 //Includes 
-include('process/s_post_download.php');
-include('process/s_activate_plugin.php');
-include('process/s_download.php');
-include('process/enqueue.php');
+include('/process/init.php');
+include('/process/Book_init.php');
+include('/admin/Book_admin_init.php');
+
+
 
 //Hooks
-register_activation_hook(__FILE__,'s_activate_plugin');    
-    
-add_action('the_content', 's_post_download');
-add_action( 'wp_enqueue_scripts', 's_enqueue_scripts');
+register_activation_hook(__FILE__,'init_function');
+add_action('init','Book_init');
+add_action('admin_init','Book_admin_init');
 
 //ShortCodes
+
