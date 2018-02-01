@@ -1,0 +1,2 @@
+- will  need to remove the " wp _debug " to  false   on  my server at home 
+

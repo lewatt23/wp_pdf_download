@@ -15,7 +15,7 @@ function s_post_download($content){
 
     $mypost = get_post();
     
-    if ( is_singular('post')){
+    if (get_post_type($mypost->ID) == 'post'){
         
     //am getting  the  post  here  
         

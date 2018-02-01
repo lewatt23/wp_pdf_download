@@ -46,12 +46,29 @@ try{
 
      
 try{
-    require_once('/../inc/tcpdf_min/tcpdf.php');
+    require_once(WPD_PATH.'/inc/tcpdf_min/tcpdf.php');
 }
 catch (Exception $e) {
-   echo "Error  while uploading TCPDF lib";
+   echo "Error  while uploading TCPDF lib".$e->getMessage();
   }
   
+    
+    
+//importing  simple dom    
+    
+    
+ try{
+    require_once(WPD_PATH.'/inc/simplehtmldom/simple_html_dom.php');
+}
+catch (Exception $e) {
+   echo "Error  while uploading simple dom lib".$e->getMessage();
+  }   
+    
+    
+    
+    
+  
+    
   
 class MYPDF extends TCPDF {
 
@@ -66,7 +83,7 @@ class MYPDF extends TCPDF {
 		// Set font
 		$this->SetFont('helvetica', 'B', 20);
 		// here am  setting the title
-		$this->Cell(0, 15, $mytitle, 0, false, 'C', 0, '', 0, false, 'M', 'M');
+		$this->Cell(0, 15, 'www.cameroongcerevision.com', 0, false, 'C', 0, '', 0, false, 'M', 'M');
 	}
 
 	// Page footer
@@ -127,51 +144,82 @@ $pdf->AddPage();
 
 
 //creating pdf file    
- try{  
 
-
-if (empty ( $mycontent )) {
-    
-	echo "Post is empty";			
-			
-
-}else{
       
      
 // set some text to print
-    
+//getiing  content  variable  the  adding  
+// my own kind of header  then  parsing  it 
 $html ='';    
     
 $html = '<p>
 For more visite www.cameroongcerevision.com
 </p>';
-
-//trying content in text    
-    
- 
 $html .= '<body><br><hr><br>'.htmlspecialchars_decode ( htmlentities ( $mycontent, ENT_NOQUOTES, 'UTF-8', false ), ENT_NOQUOTES );
-    
-//$txt.=.$mycontent;    
-   
 $html .="</body>";    
 
-//since i have not yet resolve the proble  of image  i will  remove it while try to resolve the problem    
-preg_match('/<img[^>]+./', $html);
- $html = preg_replace('/<img[^>]+./', '', $html);
-          
+    
+    
+// prasing images  in the  content  
+// to  undertand  better  please  google  simple_html_dom
+//not really  the best  way  of orangizing  my  code  sorry :)    
+    
+include(WPD_PATH.'/process/parseing_images.php');
+    
+
+    
+    
+
+    
+    
     
 // print a block of text using Write()
-$pdf->writeHTML($html, true, false, true, false, '');
+$pdf->writeHTML ( $html, true, 0, true, 0 );
 
-// ---------------------------------------------------------
 
+//working  on  adding water  mark 
+
+$pageno = $pdf->getNumPages ();
+    
+for($i = 1; $i <= $pageno; $i ++){ 
+    $pdf->setPage ( $i );
+					
+    // Get the page width/height
+    $myPageWidth = $pdf->getPageWidth ();
+					
+    $myPageHeight = $pdf->getPageHeight ();
+					
+  // Find the middle of the page and adjust.
+   $myX = ($myPageWidth / 2) - 75;
+   $myY = ($myPageHeight / 2) + 25;
+					
+  // Set the transparency of the text to really light
+   $pdf->SetAlpha ( 0.09 );
+					
+  // Rotate 45 degrees and write the watermarking text
+					
+    $pdf->StartTransform ();
+    //rotation degree
+    $rotate_degr =  '45';
+   $pdf->Rotate ( $rotate_degr, $myX, $myY );
+   $water_font =  'courier';
+  $pdf->SetFont ( $water_font, "", 30 );
+   $watermark_text = 'www.cameroongcerevision.com';
+  $pdf->Text ( $myX, $myY, $watermark_text );
+  $pdf->StopTransform ();
+					
+// Reset the transparency to default
+$pdf->SetAlpha ( 1 );
+				
+			
+    
+    
+}
+    
+    
+    
+    
 //Close and output PDF document
 $pdf->Output($mytitle.'.pdf', 'I');
-}
-
-}catch(Exception $e){
-    echo " Error while getting content  " .$e;
-}     
-
 
 }
