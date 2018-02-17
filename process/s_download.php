@@ -5,8 +5,9 @@ if(isset($_GET['singlePost'])){
     
     //Here  we  get  the post  if 
 
-$s_postId= $_GET['singlePost'];
+$s_postId = sanitize_text_field($_GET['singlePost']);
    
+$wpd_options = get_option('wpd_ops');
 
     
     
@@ -64,8 +65,15 @@ catch (Exception $e) {
    echo "Error  while uploading simple dom lib".$e->getMessage();
   }   
     
+//getting  insert  function     
+   try{
+    require_once(WPD_PATH.'/process/insert.php');
+}
+catch (Exception $e) {
+   echo "Error  while adding insert function ".$e->getMessage();
+  }   
     
-    
+      
     
   
     
@@ -75,6 +83,9 @@ class MYPDF extends TCPDF {
 	//Page header
 	public function Header() {
         
+        $wpd_options = get_option('wpd_ops');
+
+        
     //I commented this  place  out cause  i did not  want to  add  header image    
         
 //		// Logo
@@ -83,17 +94,34 @@ class MYPDF extends TCPDF {
 		// Set font
 		$this->SetFont('helvetica', 'B', 20);
 		// here am  setting the title
-		$this->Cell(0, 15, 'www.cameroongcerevision.com', 0, false, 'C', 0, '', 0, false, 'M', 'M');
+        
+        
+        if( $wpd_options['pdf_header_yn'] == "YES" && $wpd_options['pdf_header_text'] !== "" ){
+        
+		$this->Cell(0, 15,$wpd_options['pdf_header_text'] , 0, false, 'C', 0, '', 0, false, 'M', 'M');
+        }
+        else{
+         $this->Cell(0, 15,'' , 0, false, 'C', 0, '', 0, false, 'M', 'M');   
+            
+        }
 	}
 
 	// Page footer
 	public function Footer() {
+                $wpd_options = get_option('wpd_ops');
+
 		// Position at 15 mm from bottom
 		$this->SetY(-15);
 		// Set font
 		$this->SetFont('helvetica', 'I', 8);
 		// Page number
-		$this->Cell(0, 10, 'Page '.$this->getAliasNumPage().'/'.$this->getAliasNbPages().' ' .'more at www.cameroongcerevision.com', 0, false, 'C', 0, '', 0, false, 'T', 'M');
+         
+        if( $wpd_options['pdf_header_yn'] == "YES" && $wpd_options['pdf_header_text'] !== "" ){
+		$this->Cell(0, 10, 'Page '.$this->getAliasNumPage().'/'.$this->getAliasNbPages().' ' .$wpd_options['pdf_header_text'], 0, false, 'C', 0, '', 0, false, 'T', 'M');
+        }
+        else{
+         $this->Cell(0, 10, 'Page '.$this->getAliasNumPage().'/'.$this->getAliasNbPages(), 0, false, 'C', 0, '', 0, false, 'T', 'M');
+        }
 	}
 }
 
@@ -152,9 +180,6 @@ $pdf->AddPage();
 // my own kind of header  then  parsing  it 
 $html ='';    
     
-$html = '<p>
-For more visite www.cameroongcerevision.com
-</p>';
 $html .= '<body><br><hr><br>'.htmlspecialchars_decode ( htmlentities ( $mycontent, ENT_NOQUOTES, 'UTF-8', false ), ENT_NOQUOTES );
 $html .="</body>";    
 
@@ -171,7 +196,7 @@ include(WPD_PATH.'/process/parseing_images.php');
     
 
     
-    
+if($wpd_options['pdf_water_yn'] =='YES' && $wpd_options['pdf_water_text'] !=="" ){    
     
 // print a block of text using Write()
 $pdf->writeHTML ( $html, true, 0, true, 0 );
@@ -204,7 +229,7 @@ for($i = 1; $i <= $pageno; $i ++){
    $pdf->Rotate ( $rotate_degr, $myX, $myY );
    $water_font =  'courier';
   $pdf->SetFont ( $water_font, "", 30 );
-   $watermark_text = 'www.cameroongcerevision.com';
+   $watermark_text = $wpd_options['pdf_water_text'];
   $pdf->Text ( $myX, $myY, $watermark_text );
   $pdf->StopTransform ();
 					
@@ -215,11 +240,29 @@ $pdf->SetAlpha ( 1 );
     
     
 }
+}else{
+    // print a block of text using Write()
+$pdf->writeHTML ( $html, true, 0, true, 0 );
+}
     
+ //inseriting in database before  outputing
     
-    
-    
+db_insert();    
 //Close and output PDF document
-$pdf->Output($mytitle.'.pdf', 'I');
 
+if($wpd_options['pdf_post_title'] =="YES"){
+ 
+$pdf->Output($mytitle.'.pdf', 'I');
+}
+if($wpd_options['pdf_post_title'] =="NO" && $wpd_options['pdf_custom_title'] !=="" ){
+
+$pdf->Output($wpd_options['pdf_custom_title'].'.pdf', 'I');
+}
+    
+else{
+
+  $pdf->Output($s_postId.'.pdf', 'I');
+    
+}
+    
 }

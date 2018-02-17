@@ -1,2 +1,6 @@
-- will  need to remove the " wp _debug " to  false   on  my server at home 
++ will  need to remove the " wp _debug " to  false   on  my server at home
+- have to sanitize  the  plugin  get  method
+- have to  add the  admin panel  for this  plugin
+- have to  add  the number of page download  for  each  day  , week  , and  month
+- create  database for each  download 
 
