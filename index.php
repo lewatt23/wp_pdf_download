@@ -2,7 +2,7 @@
 /*
 *Plugin Name: wp_pdf_download
 *Description:A simple wp  plugin that  permets us to download our post  as pdf's 
-*Version:1.1
+*Version:1.2
 *Author:Mfou'ou medjo stanly
 *Text Domain:Wp-post-to-pdf-download
 *
@@ -65,12 +65,20 @@ include('admin/process/save-form-options.php');
 include('admin/process/wpd-stats.php');
 include('admin/process/stats-form.php');
 include('admin/process/dashboard-api.php');
+include('admin/process/admin_enqueue.php');
+include('admin/process/ajax_chartjs.php');
+
+
 //Hooks
 register_activation_hook(__FILE__,'s_activate_plugin');    
 add_action('init','pdf_plugin_functions');   
 add_action( 'admin_enqueue_scripts', 's_enqueue_scripts');
 add_action('admin_menu','s_add_admin_menu');
 add_action( 'wp_dashboard_setup', 'add_dashboard_wpd' );
+add_action( 'admin_enqueue_scripts', 'admin_dashbord_scripts');
+add_action( 'wp_ajax_Ajax_chartjs', 'Ajax_chartjs');
+
+
 
 
 

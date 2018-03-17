@@ -2,7 +2,13 @@
 *main style for styling post
 *
 */
-
+#btn1{
+padding: 10px 10px;
+background-color: #4CAF50;
+border: 2px;
+color: #fff ;
+font-weight: bolder;
+}
 
 .btn-download{
     padding: 10px 20px !important;
@@ -23,3 +29,27 @@
     font-size: 14px !important;
     color: #fff !important;
 }
+
+
+
+
+
+    canvas{
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+        height: 600px;
+        width: 800px;
+        
+    }
+    .chart-container {
+        width: 100%;
+        margin-left: 40px;
+        margin-right: 40px;
+    }
+    .container1 {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+    }

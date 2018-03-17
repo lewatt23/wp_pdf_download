@@ -1,5 +1,7 @@
 <?php
 
+//clearing dugguer
+
 if(isset($_GET['singlePost'])){
     
     
@@ -46,35 +48,22 @@ try{
 //calling the  post creation method
 
      
-try{
-    require_once(WPD_PATH.'/inc/tcpdf_min/tcpdf.php');
-}
-catch (Exception $e) {
-   echo "Error  while uploading TCPDF lib".$e->getMessage();
-  }
-  
+include(WPD_PATH.'/inc/tcpdf_min/tcpdf.php');
+
+
     
     
 //importing  simple dom    
     
     
- try{
-    require_once(WPD_PATH.'/inc/simplehtmldom/simple_html_dom.php');
-}
-catch (Exception $e) {
-   echo "Error  while uploading simple dom lib".$e->getMessage();
-  }   
+ include(WPD_PATH.'/inc/simplehtmldom/simple_html_dom.php');
+  
     
 //getting  insert  function     
-   try{
-    require_once(WPD_PATH.'/process/insert.php');
-}
-catch (Exception $e) {
-   echo "Error  while adding insert function ".$e->getMessage();
-  }   
-    
-      
-    
+   
+include(WPD_PATH.'/process/insert.php');
+
+
   
     
   
@@ -190,6 +179,7 @@ $html .="</body>";
 //not really  the best  way  of orangizing  my  code  sorry :)    
     
 include(WPD_PATH.'/process/parseing_images.php');
+
     
 
     

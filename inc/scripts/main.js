@@ -1,105 +1,168 @@
-jQuery(function($){
-    $("#recipe_rating").bind( "rated", function(){
-        $(this).rateit( "readonly", true );
 
-        var form                    =   {
-            action:                     "r_rate_recipe",
-            rid:                        $(this).data('rid'),
-            rating:                     $(this).rateit( 'value' )
-        };
+jQuery(function(){  
+  
 
-        $.post( recipe_obj.ajax_url, form, function(data){
+jQuery('#btn1').on('click', function(e) {
+    e.preventDefault();
+    e.stopPropagation(); // only neccessary if something above is listening to the (default-)event too
 
-        });
-    });
+   console.log('starting to  getting data');
 
-    $("#recipe-form").on( "submit", function(e){
-        e.preventDefault();
+    
 
-        $(this).hide();
-        $("#recipe-status").html('<div class="alert alert-info text-center">Please wait!</div>');
 
-        var form                =   {
-            action:                 "r_submit_user_recipe",
-            content:                tinymce.activeEditor.getContent(),
-            title:                  $("#r_inputTitle").val(),
-            ingredients:            $("#r_inputIngredients").val(),
-            time:                   $("#r_inputTime").val(),
-            utensils:               $("#r_inputUtensils").val(),
-            level:                  $("#r_inputLevel").val(),
-            meal_type:              $("#r_inputMealType").val()
-        };
+    
 
-        $.post( recipe_obj.ajax_url, form ).always(function(data){
-            if( data.status == 2 ){
-                $('#recipe-status').html('<div class="alert alert-success">Recipe submitted successfully!</div>');
-            }else{
-                $('#recipe-status').html(
-                    '<div class="alert alert-danger">Unable to submit recipe. Please fill in all fields.</div>'
-                );
-                $("#recipe-form").show();
-            }
-        });
-    });
+    
+     ajaxcall();
 
-    $("#register-form").on( 'submit', function(e){
-        e.preventDefault();
+    
+    
+  
+});    
+    
+    
 
-        $("#register-status").html(
-            '<div class="alert alert-info">Please wait while your account is being created.</div>'
-        );
-        $(this).hide();
+function  ajaxcall(){
 
-        var form                =   {
-            action:                                     "recipe_create_account",
-            name:                                       $("#register-form-name").val(),
-            username:                                   $("#register-form-username").val(),
-            email:                                      $("#register-form-email").val(),
-            pass:                                       $("#register-form-password").val(),
-            confirm_pass:                               $("#register-form-repassword").val(),
-            _wpnonce:                                   $("#_wpnonce").val()
-        };
+   var ctx =  jQuery('.chartjs-render-monitor')[0].getContext('2d');
+var config = {
+                type: 'line',
+                data: {
+                    labels: ["Today"],
+                    datasets: [ {
+                        label: "Downloads",
+                        fill: false,
+                        backgroundColor: window.chartColors.blue,
+                        borderColor: window.chartColors.blue,
+                        data: [18, 33, 22, 19, 11, 39, 30],
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    title:{
+                        display: true,
+                        text: 'downloads'
+                    },
+                   scales: {
+            yAxes: [{
+                position: "left",
+                "id": "y-axis-0",
+            }, {
+                position: "right",
+                "id": "y-axis-1",
+            }]
+        }
+                }
+            };    
+    
+    
+    var data = {
+		'action': 'Ajax_chartjs',
+		'whatever': ajax_object.we_value      // We pass php values differently!
+	};
+	
+	jQuery.post(ajax_object.ajax_url, data, function(response) {
+	}).done(function(response){
+     var info_array = [];
+     var dates = []    
+        
+    var info = JSON.parse(response ,function (key, value) {
+    if (key == "download_num") {
+        info_array.push(value);
+    } if(key == "date"){
+        dates.push(value);
+    }}
+);
+ for(var j=0;j<info_array.length;j++){
+            info_array[j] = Math.floor((info_array[j])/2);    
 
-        $.post( recipe_obj.ajax_url, form ).always(function(response){
-            if( response.status == 2 ){
-                $("#register-status").html('<div class="alert alert-success">Account created!</div>');
-                location.href           =   recipe_obj.home_url;
-            }else{
-                $("#register-status").html(
-                    '<div class="alert alert-danger">' +
-                    'Unable to create an account. Please try again with a different username/email.' +
-                    '</div>'
-                );
-                $("#register-form").show();
-            }
-        });
-    });
+    } 
+        
+    
+    if(jQuery('#stats').val() == 'today'){
+      
+     var forecast_chart = new Chart(ctx, config);
 
-    $('#login-form').on( 'submit', function(e){
-        e.preventDefault();
+     var chart_labels = ['Today'];
+     var  temp_dataset = [];
+      
+         
+     temp_dataset.push(info_array[info_array.length - 1]);  
+    
+    
+    
+    var data = forecast_chart.config.data;
+    data.datasets[0].data = temp_dataset;
+    data.labels = chart_labels;
+    forecast_chart.update();    
+        
+        
+        
+        
+        
+   
+        
+    }
+    
+    if(jQuery('#stats').val() == 'yesterday'){
+      
+        
+     var forecast_chart = new Chart(ctx, config);
 
-        $("#login-status").html('<div class="alert alert-info">Please wait while we log you in.</div>');
-        $(this).hide();
+     var chart_labels = ['yesterday','Today'];
+     var  temp_dataset = []; 
+     temp_dataset.push(info_array[info_array.length - 2]);  
+     temp_dataset.push(info_array[info_array.length - 1]);  
 
-        var form                                    =   {
-            _wpnonce:                                   $("#_wpnonce").val(),
-            action:                                     "recipe_user_login",
-            username:                                   $("#login-form-username").val(),
-            pass:                                       $("#login-form-password").val()
-        };
-
-        $.post( recipe_obj.ajax_url, form ).always(function(data){
-            if( data.status == 2 ){
-                $("#login-status").html('<div class="alert alert-success">Success!</div>');
-                location.href                       =   recipe_obj.home_url;
-            }else{
-                $("#login-status").html(
-                    '<div class="alert alert-danger">' +
-                    'Unable to login. Please try again with a different username/password.' +
-                    '</div>'
-                );
-                $("#login-form").show();
-            }
-        });
-    });
+        
+    
+    
+    
+    var data = forecast_chart.config.data;
+    data.datasets[0].data = temp_dataset;
+    data.labels = chart_labels;
+    forecast_chart.update();  
+        
+    }
+    if(jQuery('#stats').val() == 'week'){
+     
+         var forecast_chart = new Chart(ctx, config);
+    
+        
+   var   chart_labels = dates;
+     var  temp_dataset = info_array;  
+    
+    
+    
+    var data = forecast_chart.config.data;
+    data.datasets[0].data = temp_dataset;
+    data.labels = chart_labels;
+    forecast_chart.update();    
+        
+    }
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    }).fail(function(data){
+        alert("Try again champ!");
+   });
+    
+    
+    
+    
+    
+    
+}    
+    
+    
+    
 });

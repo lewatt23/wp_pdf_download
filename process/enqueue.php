@@ -3,8 +3,9 @@
 function s_enqueue_scripts(){
     
     global $typenow;
+    $screen = get_current_screen();
     
-    if(!isset($_GET['page']) || $_GET['page'] != "s_plugin_opts" ){
+    if(!isset($_GET['page']) || $_GET['page'] != "s_plugin_opts" )  {
         return ;
     }
     
@@ -27,6 +28,21 @@ function s_enqueue_scripts(){
 
     //adding scripts 
     
+     wp_enqueue_script( 'wpd_js',
+     WPD_PLUGIN_URL . 'inc/scripts/main.js', array('jquery'),true );
+     wp_enqueue_script('wpd_js');
+    
+        
+    wp_enqueue_script( 'wpd_bootstrap',
+    WPD_PLUGIN_URL . 'inc/scripts/bootstrap.min', array('jquery'),true );
+    wp_enqueue_script('wpd_bootstrap');
+
+    
+    
+    wp_enqueue_script( 'wpd_chartjs',
+    WPD_PLUGIN_URL . 'inc/scripts/Chart.bundle.min', array('jquery'),true );
+    wp_enqueue_script('wpd_chartjs');
+
    
 }
 
