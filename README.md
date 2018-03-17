@@ -9,3 +9,8 @@ track  download also  added  some  little  things for  download options
 - can still solve the  problem  of is_singular
 - stats  are not working  well
 - not yet added chartjs  
+
+
+1.2 
+
+Added  chartjs   plugin  fully  working , with  chartjs added , tested  on wordpress 4.9.4 (latest version ) , can work  on any wordpress website
