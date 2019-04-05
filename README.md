@@ -1,5 +1,5 @@
 # wp_pdf_download
-This  is  a wp  plugin to permit people to  download wp  post's as article 
+This  is  a wp  plugin to permit people to  download wp  post's as pdf
 
 1.0 
 Here  in this version i added the admin apanel  and  a  dashboard  panel   to able to
